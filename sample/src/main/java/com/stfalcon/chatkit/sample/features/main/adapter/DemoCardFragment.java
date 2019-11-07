@@ -107,11 +107,11 @@ public class DemoCardFragment extends Fragment
         if (token == null) {
 
         }
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.saved_token), "de");
-        editor.commit();
+//        SharedPreferences.Editor editor = sharedPref.edit();
+//        editor.putString(getString(R.string.saved_token), "de");
+//        editor.commit();
 
-        //onAction();
+        onAction();
     }
 
     private void login_by_name() {
