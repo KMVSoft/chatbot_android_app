@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Chatbot Гевьон</string>
+    <string name="chatbot_title">Бот Гевьон</string>
+
+    <string name="view">View</string>
+
+    <string name="login_anonymous">Войти анонимно</string>
+    <string name="btn_anonymous_login">Войти</string>
+    <string name="login_with_name">Войти по логину</string>
+    <string name="btn_login_by_name">Войти по логину</string>
+    <string name="singup">Зарегистрироваться</string>
+    <string name="btn_singup">Зарегистрироваться</string>
+    <string name="saved_token">saved_token</string>
+
+    <!-- API   -->
+    <string name="api_url">http://142.93.134.15</string>
+
+    <string name="sample_title_holder">Custom view holder</string>
+    <string name="sample_subtitle_holder">Custom view holder to extend default behaviour for a new features</string>
+    <string name="sample_title_custom_content">Custom content type</string>
+    <string name="sample_subtitle_custom_content">Custom message content on the example of voice message</string>
+
+    <string name="hint_enter_a_message">Type a message…</string>
+    <string name="on_log_click_message">Your custom long click handler</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_copy">Copy</string>
+    <string name="copied_message">Message copied!</string>
+
+    <string name="date_header_today">Today</string>
+    <string name="date_header_yesterday">Yesterday</string>
+
+    <string-array name="view_types_dialog">
+        <item name="image">Image (default)</item>
+        <item name="voice">Voice message (custom)</item>
+    </string-array>
+
+    <string name="start_typing_status">Start typing</string>
+    <string name="stop_typing_status">Stop typing</string>
+
+</resources>
