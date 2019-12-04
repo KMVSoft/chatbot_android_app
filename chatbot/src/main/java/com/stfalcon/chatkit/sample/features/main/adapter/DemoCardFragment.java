@@ -10,8 +10,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.stfalcon.chatkit.sample.R;
+import com.stfalcon.chatkit.sample.api.ChatbotWebService;
+import com.stfalcon.chatkit.sample.api.model.Status;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /*
  * Карта начальной активити где располагается
@@ -119,7 +126,29 @@ public class DemoCardFragment extends Fragment
     }
 
     private void signup() {
+        EditText etLogin = (EditText) getView().findViewById(R.id.etLogin);
+        EditText etPassword = (EditText) getView().findViewById(R.id.etPassword);
 
+
+
+        ChatbotWebService
+            .getInstance()
+            .getChatbotAPI()
+            .registration(
+                    etLogin.getText().toString(),
+                    etPassword.getText().toString())
+            .enqueue(new Callback<Status>() {
+                         @Override
+                         public void onResponse(Call<Status> call, Response<Status> response) {
+                             Toast.makeText(getContext(), "success", Toast.LENGTH_LONG).show();
+                         }
+
+                         @Override
+                         public void onFailure(Call<Status> call, Throwable t) {
+                             Toast.makeText(getContext(), "failure", Toast.LENGTH_LONG).show();
+                         }
+                     }
+             );
     }
 
     public void onAction() {
