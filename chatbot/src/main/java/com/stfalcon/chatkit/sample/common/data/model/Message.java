@@ -2,6 +2,7 @@ package com.stfalcon.chatkit.sample.common.data.model;
 
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.commons.models.MessageContentType;
+import com.stfalcon.chatkit.sample.api.model.MessageAPI;
 
 import java.util.Date;
 
@@ -18,6 +19,11 @@ public class Message implements IMessage,
     private User user;
     private Image image;
     private Voice voice;
+
+    private static User chatbot = new User("id",
+            "Chatbot",
+            "https://i.imgur.com/2OQMH2z.png",
+            true);
 
     public Message(String id, User user, String text) {
         this(id, user, text, new Date());
@@ -105,5 +111,9 @@ public class Message implements IMessage,
         public int getDuration() {
             return duration;
         }
+    }
+
+    static public Message from(MessageAPI message) {
+        return new Message("id", chatbot, message.getContent());
     }
 }

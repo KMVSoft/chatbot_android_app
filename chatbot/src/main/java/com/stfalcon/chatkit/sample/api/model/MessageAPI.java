@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
-public class Message {
+public class MessageAPI {
     private String content;
     private LocalDateTime created;
 }

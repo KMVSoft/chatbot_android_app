@@ -62,8 +62,8 @@ public final class MessagesFixtures extends FixturesData {
     private static User getUser() {
         boolean even = true;
         return new User(
-                "bot",
-                "",
+                "0",
+                "Я",
                 "https://i.imgur.com/2OQMH2z.png",
                 true);
     }

@@ -52,32 +52,6 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
         };
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        messagesAdapter.addToStart(
-                new Message("id",
-                        new User("id",
-                                "Chatbot",
-                                "https://i.imgur.com/2OQMH2z.png",
-                                true),
-                        "SOME text"), true);
-
-        messagesAdapter.addToStart(
-                new Message("id",
-                        new User("id",
-                                "Chatbot",
-                                "https://i.imgur.com/2OQMH2z.png",
-                                true),
-                        "Упячка тыщ тыщ"), true);
-        messagesAdapter.addToStart(
-                new Message("id",
-                        new User("0",
-                                "Chatbot",
-                                "https://i.imgur.com/2OQMH2z.png",
-                                true),
-                        "Упячка тыщ тыщ"), true);
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -129,7 +103,7 @@ public abstract class DemoMessagesActivity extends AppCompatActivity
 //        new Handler().postDelayed(new Runnable() { //imitation of internet connection
 //            @Override
 //            public void run() {
-//                ArrayList<Message> messages = MessagesFixtures.getMessages(lastLoadedDate);
+//                ArrayList<MessageAPI> messages = MessagesFixtures.getMessages(lastLoadedDate);
 //                lastLoadedDate = messages.get(messages.size() - 1).getCreatedAt();
 //                messagesAdapter.addToEnd(messages, false);
 //            }

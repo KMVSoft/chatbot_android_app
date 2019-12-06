@@ -5,15 +5,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 import com.stfalcon.chatkit.sample.R;
+import com.stfalcon.chatkit.sample.api.ChatbotWebService;
+import com.stfalcon.chatkit.sample.api.model.MessageAPI;
+import com.stfalcon.chatkit.sample.api.model.SentMessage;
 import com.stfalcon.chatkit.sample.common.data.fixtures.MessagesFixtures;
 import com.stfalcon.chatkit.sample.common.data.model.Message;
+import com.stfalcon.chatkit.sample.common.data.model.User;
 import com.stfalcon.chatkit.sample.features.demo.DemoMessagesActivity;
 import com.stfalcon.chatkit.sample.utils.AppUtils;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DefaultMessagesActivity extends DemoMessagesActivity
         implements MessageInput.InputListener,
@@ -26,6 +39,18 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
         DefaultMessagesActivity.token = token;
         context.startActivity(new Intent(context, DefaultMessagesActivity.class));
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        List<MessageAPI> messages = getMessages(0);
+        for (MessageAPI msg : messages) {
+            messagesAdapter.addToStart(Message.from(msg), true);
+        }
+
+
+    }
+
 
     private MessagesList messagesList;
 
@@ -47,7 +72,56 @@ public class DefaultMessagesActivity extends DemoMessagesActivity
     public boolean onSubmit(CharSequence input) {
         super.messagesAdapter.addToStart(
                 MessagesFixtures.getTextMessage(input.toString()), true);
+        sendMessage(input.toString());
         return true;
+    }
+
+    private void sendMessage(String message) {
+        final Context context = this;
+        ChatbotWebService
+                .getInstance()
+                .getChatbotAPI()
+                .sendMessage(token, message)
+                .enqueue(new Callback<MessageAPI>() {
+                    @Override
+                    public void onResponse(Call<MessageAPI> call, Response<MessageAPI> response) {
+                        MessageAPI message = response.body();
+                        //Toast.makeText(context, message.toString(), Toast.LENGTH_LONG).show();
+//                        messagesAdapter.addToStart(Message.from(message), true);
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<MessageAPI> call, Throwable t) {
+
+                    }
+                });
+    }
+
+
+    private List<MessageAPI> getMessages(int afterId) {
+        final List<MessageAPI> result = new ArrayList<>();
+        ChatbotWebService
+                .getInstance()
+                .getChatbotAPI()
+                .receiveMessage(token, 0)
+                .enqueue(new Callback<List<MessageAPI>>() {
+                             @Override
+                             public void onResponse(Call<List<MessageAPI>> call, Response<List<MessageAPI>> response) {
+                                 List<MessageAPI> messages = response.body();
+                                 if (messages != null) {
+                                     result.addAll(response.body());
+                                 }
+                             }
+
+                             @Override
+                             public void onFailure(Call<List<MessageAPI>> call, Throwable t) {
+
+                             }
+                         }
+
+                );
+        return result;
     }
 
     @Override

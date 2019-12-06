@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,9 @@ import android.widget.Toast;
 import com.stfalcon.chatkit.sample.R;
 import com.stfalcon.chatkit.sample.api.ChatbotWebService;
 import com.stfalcon.chatkit.sample.api.model.Status;
+import com.stfalcon.chatkit.sample.api.model.Token;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -109,14 +113,7 @@ public class DemoCardFragment extends Fragment
     }
 
     private void anonymous_login() {
-        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
-        String token = sharedPref.getString(getString(R.string.saved_token), null);
-        if (token == null) {
 
-        }
-//        SharedPreferences.Editor editor = sharedPref.edit();
-//        editor.putString(getString(R.string.saved_token), "de");
-//        editor.commit();
 
         onAction();
     }
@@ -125,30 +122,66 @@ public class DemoCardFragment extends Fragment
 
     }
 
+    private void signin(final String login, final String password) {
+        ChatbotWebService
+                .getInstance()
+                .getChatbotAPI()
+                .login(login, password)
+                .enqueue(new Callback<Token>() {
+                             @Override
+                             public void onResponse(Call<Token> call, Response<Token> response) {
+                                 Token token = response.body();
+                                 signin(token.getToken());
+                             }
+
+                             @Override
+                             public void onFailure(Call<Token> call, Throwable t) {
+                                 Toast.makeText(getContext(), "Дружище! Тут какая-та ошибка!", Toast.LENGTH_LONG).show();
+                             }
+                         }
+                );
+    }
+
+    private void signin(String token) {
+        SharedPreferences sharedPref = getActivity().getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(getString(R.string.saved_token), token);
+        editor.commit();
+        actionListener.onAction(token);
+
+    }
+
+
+
     private void signup() {
         EditText etLogin = (EditText) getView().findViewById(R.id.etLogin);
         EditText etPassword = (EditText) getView().findViewById(R.id.etPassword);
+        String login = etLogin.getText().toString();
+        String password = etPassword.getText().toString();
+        singup(login, password);
 
+    }
 
-
+    private void singup(final String login, final String password) {
         ChatbotWebService
-            .getInstance()
-            .getChatbotAPI()
-            .registration(
-                    etLogin.getText().toString(),
-                    etPassword.getText().toString())
-            .enqueue(new Callback<Status>() {
-                         @Override
-                         public void onResponse(Call<Status> call, Response<Status> response) {
-                             Toast.makeText(getContext(), "success", Toast.LENGTH_LONG).show();
-                         }
+                .getInstance()
+                .getChatbotAPI()
+                .registration(login, password)
+                .enqueue(new Callback<Status>() {
+                             @Override
+                             public void onResponse(Call<Status> call, Response<Status> response) {
+                                 Status status = response.body();
+                                 if (status.getStatus().equals("ok")) {
+                                     signin(login, password);
+                                 }
+                             }
 
-                         @Override
-                         public void onFailure(Call<Status> call, Throwable t) {
-                             Toast.makeText(getContext(), "failure", Toast.LENGTH_LONG).show();
+                             @Override
+                             public void onFailure(Call<Status> call, Throwable t) {
+                                 Toast.makeText(getContext(), "Дружище! Тут какая-та ошибка!", Toast.LENGTH_LONG).show();
+                             }
                          }
-                     }
-             );
+                );
     }
 
     public void onAction() {
